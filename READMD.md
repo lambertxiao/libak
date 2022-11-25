@@ -1,28 +1,50 @@
 # 简介
 
-库如起名，传包要猛
+## 为什写libak
 
-假设有服务端S和客户端C，需要在CS之间传输数据，传输的数据内容格式可变，传输的网络协议可变
+### 其一
 
+为了解决一种业务场景，假设我们有一条消息希望发送给服务端
 
-Client 和 Server 要配套
+```c++
+struct HelloMsg {
+  std::string field1;
+  uint32_t field2;
+  char* field3;
+  char* field3_len;
+};
+```
 
-上层只管将一个数据交给client，而不需要关心数据通过什么格式，经过什么协议传递给Server（这里是库本身不需要管，所有组装包的逻辑都可以交由外部注入猛，但是库本身需要提供常见的诸如tcp，udp之类的协议传输功能）
+在一开始的时候，为了方便，使用了json进行数据传输，所以我们实际发出去的消息长这样
 
-但这里有个问题，发出去的包需要能被Server接收，
-
-常见的Server可能使用http，tcp，udp，quic等协议之后，用户在使用client的时候利用是知道需要用什么协议以及什么格式发送给server
-
-
-# Client
-
-interface Client {
-    Send(msg)
-    RegistEncoder()
-    RegistDecoder()
+```json
+{
+  "field1": "foo",
+  "field2": 10,
+  "field3": "xxxxxxxxxxx"
 }
+```
 
-- TCPClient
-- UDPClient
-- QUICClient
+很久以后，线上的数据发现用json传输效率比较低，因此决定将数据格式改为protobuf, 这个时候我们实际发出去的消息长这样
 
+```
+field1:foo,field2:10,field3:xxxxxxxxxxx
+```
+
+再后来，由于业务变动，HelloMsg里面加了大量的字段，并且主要用来传输二进制数据，这个时候用protobuf会有额外的开销，所以我们决定直接使用二进制传输数据，规定每个字段的数据占用字节，最后实际发出去的消息可能长这个样子
+
+```
+sdsdsadauhdsgisdpfgqu348236571874uikfjdsfjsdyu[f'fp]]
+```
+
+总结，对上都是同一条msg格式，但是呢，实际传输的时候，它可以是json格式，pb格式，二进制格式；当然发出去是json，收到的包也一定是json，所以具体用什么格式来发送交由上层根据业务场景来决定，将消息内容和消息序列化给解耦开
+
+### 其二
+
+为了可以灵活地使用某种传输层协议，如tcp，udp，quic
+
+由于tcp性能不高，某天服务端升级了，支持使用quic协议传输数据了，client端可以简单地通过配置项，修改底层的数据传输协议，由libak来处理不同的传输层协议的链接建立以及传输。
+
+### 其三
+
+不同于一般的网络库，消息的序列化及反序列化对上都是屏蔽的，libak将该过程交由上层实现，使得上层能利用内存池，对象池等技术进行更加高效的编包拆包。

@@ -1,23 +1,45 @@
 #include <string>
+
 #include "libak.h"
+#include "libak_client.h"
+#include "transport_tcp.h"
 
 struct HelloMsg {
-  std::string msg;
+  std::string op_type;
+  std::string field1;
+  uint32_t field2;
+  char* field3;
+  char* field3_len;
 };
 
-int main() { 
+class HelloMsgEnDecoder : public libak::MsgEnDecoder {
+ public:
+  void encode_msg(){};
+  void decode_msg(){};
+};
+
+int main() {
+  HelloMsgEnDecoder* edc = new HelloMsgEnDecoder();
+  libak::TCPTransport* tcpp = new libak::TCPTransport();
+
+  libak::RoundTripper rt = {
+      .key = "helloak",
+      .msg_en_decoder = edc,
+      .transport = tcpp,
+  };
+
+  libak::RTCenter::regist_rt(rt);
+
   libak::Client* client;
 
   std::string rt_key = "hello";
-  libak::RoundTripper rt;
-  client->registRT(rt_key, rt);
-
+  client->regist_rt(rt_key, rt);
 
   libak::Endpoint ep = {
-    .ip = "127.0.0.1", 
-    .port = 3000,
+      .ip = "127.0.0.1",
+      .port = 3000,
   };
 
-  HelloMsg hello_msg = {.msg = "hello yo"};
-  client->send(ep, rt_key, &hello_msg, sizeof(hello_msg));
+  HelloMsg hello_msg;
+  client->send<HelloMsg>(ep, rt_key, hello_msg);
 }

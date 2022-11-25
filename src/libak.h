@@ -5,6 +5,11 @@
 
 namespace libak {
 
+class RTCenter {
+ public:
+  static void regist_rt(RoundTripper rt) { return; };
+};
+
 // 传输内容的拆包分包, 由业务上来实现
 class MsgEnDecoder {
  public:
@@ -13,15 +18,13 @@ class MsgEnDecoder {
 };
 
 // 由库来提供常见的传输协议实现，tcp, udp
-class PacketEnDecoder {
- public:
-  virtual void encode_packet() = 0;
-  virtual void decode_packet() = 0;
-};
 
+// 负责把msg从一端传输到另一端，对上屏蔽掉消息封包的过程以及使用什么传输协议
 class RoundTripper {
+ public:
+  std::string key;
   MsgEnDecoder* msg_en_decoder;
-  PacketEnDecoder* packet_en_decoder;
+  Transport* transport;
 };
 
 struct Endpoint {
@@ -29,11 +32,7 @@ struct Endpoint {
   uint32_t port;
 };
 
-class Client {
- public:
-  virtual void send(Endpoint ep, std::string rt_key, void* msg, uint32_t len) = 0;
-  virtual void registRT(std::string key, RoundTripper rt);
-};
+class Callback {};
 
 }  // namespace libak
 #endif
