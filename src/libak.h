@@ -8,14 +8,13 @@ namespace libak {
 
 class ProtoCenter {
  public:
-  static void regist_proto(Proto& proto) { return; };
-};
-
-// 传输内容的拆包分包, 由业务上来实现
-
-struct Endpoint {
-  std::string ip;
-  uint32_t port;
+  static void regist_proto(Proto& proto) { 
+    return; 
+  }
+  ;
+  static Proto* get_proto(std::string prokey) { 
+    return NULL;
+  };
 };
 
 class Callback {};

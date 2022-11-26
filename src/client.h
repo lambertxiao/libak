@@ -10,7 +10,7 @@ namespace libak {
 class Client {
  public:
   template <typename Msg>
-  void send(Endpoint ep, std::string rt_key, Msg msg);
+  void* send(Endpoint ep, std::string rt_key, Msg msg);
 
   template <typename Msg>
   void async_send(Endpoint ep, std::string rt_key, Msg msg, Callback cb);

@@ -1,6 +1,7 @@
 #include <string>
 
 #include "libak.h"
+#include "endpoint.h"
 #include "client.h"
 #include "proto.h"
 
