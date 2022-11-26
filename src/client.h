@@ -12,8 +12,8 @@ class Client {
   template <typename Msg>
   void send(Endpoint ep, std::string rt_key, Msg msg);
 
-  void async_send(Endpoint ep, std::string rt_key, void* msg, uint32_t len, Callback cb);
-  void regist_rt(std::string key, RoundTripper rt);
+  template <typename Msg>
+  void async_send(Endpoint ep, std::string rt_key, Msg msg, Callback cb);
 
  private:
   TransportPool* transport_pool;

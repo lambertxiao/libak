@@ -8,7 +8,7 @@ namespace libak {
 
 class TransportPool {
  public:
-  Transport* get_transport() const { return NULL; };
+  Transport* get_transport(Endpoint ep, std::string prokey);
 };
 
 }  // namespace libak

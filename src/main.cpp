@@ -1,8 +1,8 @@
 #include <string>
 
 #include "libak.h"
-#include "libak_client.h"
-#include "transport_tcp.h"
+#include "client.h"
+#include "proto.h"
 
 struct HelloMsg {
   std::string op_type;
@@ -20,26 +20,21 @@ class HelloMsgEnDecoder : public libak::MsgEnDecoder {
 
 int main() {
   HelloMsgEnDecoder* edc = new HelloMsgEnDecoder();
-  libak::TCPTransport* tcpp = new libak::TCPTransport();
 
-  libak::RoundTripper rt = {
-      .key = "helloak",
-      .msg_en_decoder = edc,
-      .transport = tcpp,
+  auto proto_key = "hellotp";
+  libak::Proto proto = {
+    .key = proto_key, 
+    .msg_en_decoder = edc, 
   };
 
-  libak::RTCenter::regist_rt(rt);
-
-  libak::Client* client;
-
-  std::string rt_key = "hello";
-  client->regist_rt(rt_key, rt);
+  libak::ProtoCenter::regist_proto(proto);
 
   libak::Endpoint ep = {
-      .ip = "127.0.0.1",
-      .port = 3000,
+    .ip = "127.0.0.1",
+    .port = 3000,
   };
-
   HelloMsg hello_msg;
-  client->send<HelloMsg>(ep, rt_key, hello_msg);
+
+  libak::Client* client;
+  client->send<HelloMsg>(ep, proto_key, hello_msg);
 }

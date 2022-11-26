@@ -4,13 +4,16 @@
 #include "libak.h"
 
 namespace libak {
-
+  
+// Transport 代表两端之间通过proto建立的桥梁
 class Transport {
  public:
-  virtual bool is_alive() = 0;
-  virtual void encode_packet() = 0;
-  virtual void decode_packet() = 0;
+  Proto proto;
+  Endpoint ep;
+
+  template <typename Msg>
+  void send(Msg msg);
 };
-}  // namespace libak
+}
 
 #endif

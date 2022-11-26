@@ -2,30 +2,16 @@
 #define LAMBERTX_LIBAK_H_
 
 #include <string>
+#include "proto.h"
 
 namespace libak {
 
-class RTCenter {
+class ProtoCenter {
  public:
-  static void regist_rt(RoundTripper rt) { return; };
+  static void regist_proto(Proto& proto) { return; };
 };
 
 // 传输内容的拆包分包, 由业务上来实现
-class MsgEnDecoder {
- public:
-  virtual void encode_msg() = 0;
-  virtual void decode_msg() = 0;
-};
-
-// 由库来提供常见的传输协议实现，tcp, udp
-
-// 负责把msg从一端传输到另一端，对上屏蔽掉消息封包的过程以及使用什么传输协议
-class RoundTripper {
- public:
-  std::string key;
-  MsgEnDecoder* msg_en_decoder;
-  Transport* transport;
-};
 
 struct Endpoint {
   std::string ip;
