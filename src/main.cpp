@@ -4,28 +4,40 @@
 #include "endpoint.h"
 #include "client.h"
 #include "proto.h"
+#include "msg_en_decoder.h"
+#include "conn_generator_tcp.h"
 
 struct HelloMsg {
   std::string op_type;
-  std::string field1;
-  uint32_t field2;
-  char* field3;
-  char* field3_len;
+  std::string name;
 };
 
 class HelloMsgEnDecoder : public libak::MsgEnDecoder {
  public:
-  void encode_msg(){};
-  void decode_msg(){};
+  template <typename Msg>
+  libak::EncMsg* encode_msg(Msg& msg) {
+    HelloMsg _msg = static_cast<HelloMsg>(msg);
+
+    auto content = "op_type:" + _msg.op_type + ",name=" + _msg.name;
+    auto buf = new libak::ByteData(&content[0], content.size());
+
+    auto enc_msg = new libak::EncMsg();
+    enc_msg->msg_id = "xxxxxx";
+    enc_msg->payload = buf;
+
+    return enc_msg;
+  }
 };
 
 int main() {
-  HelloMsgEnDecoder* edc = new HelloMsgEnDecoder();
+  auto edr = new HelloMsgEnDecoder();
+  auto cg = new libak::TCPConnGenerator();
 
   auto proto_key = "hellotp";
   libak::Proto proto = {
     .key = proto_key, 
-    .msg_en_decoder = edc, 
+    .edr = edr, 
+    .cg = cg,
   };
 
   libak::ProtoCenter::regist_proto(proto);
@@ -34,8 +46,12 @@ int main() {
     .ip = "127.0.0.1",
     .port = 3000,
   };
-  HelloMsg hello_msg;
 
-  libak::Client* client;
+  HelloMsg hello_msg = {
+    .op_type = "op_test",
+    .name = "hello",
+  };
+
+  auto client = new libak::Client();
   client->send<HelloMsg>(ep, proto_key, hello_msg);
 }

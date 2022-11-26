@@ -8,14 +8,12 @@
 
 namespace libak {
 
-// 负责把msg从一端传输到另一端，
+// 代表传输契约
 class Proto {
  public:
   std::string key;
-  // 负责对消息进行格式的编码转码
-  MsgEnDecoder* msg_en_decoder;
-  // 负责生成具体的连接，如tcp链接
-  ConnGenerator cg;
+  MsgEnDecoder* edr;
+  ConnGenerator* cg;
 };
 }  // namespace libak
 

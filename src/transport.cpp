@@ -5,7 +5,7 @@ namespace libak {
 
 template <typename Msg>
 void Transport::send(Msg msg) {
-  auto msg_data = proto->msg_en_decoder->encode_msg(msg);
-  mq->enqueue<EncodedMsg*>(msg_data);
+  auto msg_data = proto->edr->encode_msg(msg);
+  conn->write(msg_data);
 }
 }

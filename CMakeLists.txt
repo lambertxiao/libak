@@ -3,8 +3,8 @@ project(libak)
 set(CODE_ROOT "${PROJECT_SOURCE_DIR}/src")
 include_directories("${CODE_ROOT}")
 
-# aux_source_directory("${CODE_ROOT}/fs" FS)
-# set(SRC_DIR ${FS})
+aux_source_directory("${CODE_ROOT}" SRC)
+set(SRC_DIR ${SRC})
 
 set(WARNING_FLAGS "-Wall")
 
