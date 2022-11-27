@@ -15,18 +15,15 @@ class ByteData {
 };
 
 class EncMsg {
+ public:
   std::string msg_id;
   ByteData* payload;
 };
 
-// 负责对消息进行格式的编码转码
 class MsgEnDecoder {
  public:
-  template <typename Msg>
-  EncMsg* encode_msg(Msg& msg);
-
-  // template <typename Msg>
-  // EncodedMsg decode_msg(ByteData* payload);
+  // 消息编码
+  virtual EncMsg encode_msg(void* msg) = 0;
 };
 }  // namespace libak
 

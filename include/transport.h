@@ -18,8 +18,7 @@ class Transport {
     this->conn = conn;
   };
 
-  template <typename Msg>
-  void send(Msg msg);
+  void send(void* msg);
 };
 }
 

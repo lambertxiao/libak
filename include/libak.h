@@ -12,19 +12,10 @@
 #include "proto.h"
 #include "transport_pool.h"
 #include "transport.h"
+#include "proto_center.h"
 
 namespace libak {
 
-class ProtoCenter {
- public:
-  static void regist_proto(Proto& proto) { 
-    return; 
-  };
-  
-  static Proto* get_proto(std::string prokey) { 
-    return NULL;
-  };
-};
 
 class Callback {};
 
