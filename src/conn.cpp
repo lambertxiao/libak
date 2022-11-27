@@ -5,20 +5,10 @@
 
 namespace libak {
 
-const int MSG_ID_HEAD_SIZE = 50;
-
-void Connection::write(EncMsg& msg) {
-  // msg_id为80字节
-  // 
-  auto head_buf = malloc(MSG_ID_HEAD_SIZE*sizeof(char*));
-  std::cout << sizeof(msg.msg_id) << std::endl;
-  std::cout << msg.payload->len << std::endl;
-
-  // auto buf = malloc();
-
-  // int ret = send(socket_fd, msg, strlen(SEND_DATA), 0);
-  // if (ret != strlen(SEND_DATA)) {
-  //   return -1;
-  // }
+void Connection::write(void *data, int data_len) {
+  // 先发送一个int代表整个包的长度
+  auto ret = send(socket_fd, &data_len, sizeof(data_len), 0);
+  // 再发送payload部分
+  ret = send(socket_fd, data, data_len, 0);
 };
 }  // namespace libak

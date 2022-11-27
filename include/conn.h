@@ -12,7 +12,7 @@ class Connection {
  public:
   Connection(int socket_fd) { this->socket_fd = socket_fd; }
 
-  void write(EncMsg& msg);
+  void write(void* data, int data_len);
 
  private:
   int socket_fd;
