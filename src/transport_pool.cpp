@@ -1,7 +1,4 @@
 #include "libak.h"
-#include "transport.h"
-#include "endpoint.h"
-#include "transport_pool.h"
 
 namespace libak {
 

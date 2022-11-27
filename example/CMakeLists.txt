@@ -1,9 +1,9 @@
 project(libak)
 
-set(CODE_ROOT "${PROJECT_SOURCE_DIR}/src")
-include_directories("${CODE_ROOT}")
+include_directories("/root/workspace/libak/include")
 
-aux_source_directory("${CODE_ROOT}" SRC)
+set(CODE_ROOT "/root/workspace/libak")
+aux_source_directory("${CODE_ROOT}/src" SRC)
 set(SRC_DIR ${SRC})
 
 set(WARNING_FLAGS "-Wall")
@@ -17,4 +17,7 @@ set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-g -ggdb -O3")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
-add_executable(libak-hello ${CODE_ROOT}/main.cpp ${SRC_DIR})
+add_executable(libak-hello ${CODE_ROOT}/example/hello.cpp ${SRC_DIR})
+
+# 链接静态库
+target_link_libraries(libak-hello dl)

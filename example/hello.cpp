@@ -1,11 +1,6 @@
 #include <string>
 
 #include "libak.h"
-#include "endpoint.h"
-#include "client.h"
-#include "proto.h"
-#include "msg_en_decoder.h"
-#include "conn_generator_tcp.h"
 
 struct HelloMsg {
   std::string op_type;
