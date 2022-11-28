@@ -2,7 +2,7 @@
 #define LIBAK_TRANSPORT_H_
 
 #include "proto.h"
-#include "conn.h"
+#include "channel.h"
 #include "msg_queue.h"
 
 namespace libak {
@@ -10,12 +10,12 @@ namespace libak {
 class Transport {
  public:
   Proto* proto;
-  Connection* conn;
+  Channel* channel;
   MsgQueue *mq;
 
-  Transport(Proto* proto, Connection* conn) {
+  Transport(Proto* proto, Channel* channel) {
     this->proto = proto;
-    this->conn = conn;
+    this->channel = channel;
   };
 
   void send(void* msg);

@@ -4,9 +4,9 @@
 #include <string>
 #include "proto.h"
 #include "client.h"
-#include "conn_generator.h"
-#include "conn_generator_tcp.h"
-#include "conn.h"
+#include "channel_generator.h"
+#include "channel_generator_tcp.h"
+#include "channel.h"
 #include "endpoint.h"
 #include "msg_en_decoder.h"
 #include "proto.h"

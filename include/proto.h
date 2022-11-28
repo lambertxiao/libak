@@ -4,7 +4,7 @@
 #include <string>
 #include <functional>
 
-#include "conn_generator.h"
+#include "channel_generator.h"
 #include "msg_en_decoder.h"
 
 namespace libak {
