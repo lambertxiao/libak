@@ -3,6 +3,8 @@
 #include <vector>
 #include <algorithm>
 
+#include "common/endian.h"
+
 namespace libak {
 
 // expired by muduo
@@ -103,13 +105,11 @@ class Buffer {
     return result;
   }
 
-  int64_t peek_int64() const
-  {
+  int64_t peek_int64() const {
     assert(readable_bytes() >= sizeof(int64_t));
     int64_t be64 = 0;
     ::memcpy(&be64, buffer_reader_idx_addr(), sizeof be64);
-    // return sockets::networkToHost64(be64);
-    return 0;
+    return common::networkToHost64(be64);
   }
 };
 

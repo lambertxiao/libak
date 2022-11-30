@@ -5,9 +5,12 @@
 #include "channel_generator.h"
 
 namespace libak {
+namespace channelg {
+
 class TCPConnGenerator : public ConnGenerator {
  public:
   Channel* gen(Endpoint ep) override;
 };
+}  // namespace channelg
 }  // namespace libak
 #endif

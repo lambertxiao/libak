@@ -5,11 +5,14 @@
 
 #include <iostream>
 
-#include "libak.h"
+#include "channel.h"
+#include "channelg/channelg_tcp.h"
 
 namespace libak {
 
-Connection* TCPConnGenerator::gen(Endpoint ep) {
+namespace channelg {
+
+Channel* TCPConnGenerator::gen(Endpoint ep) {
   int clientfd = socket(AF_INET, SOCK_STREAM, 0);
   if (clientfd == -1) {
     std::cout << "create client socket error" << std::endl;
@@ -26,6 +29,7 @@ Connection* TCPConnGenerator::gen(Endpoint ep) {
     throw "connect socket error";
   }
 
-  return new Connection(clientfd);
+  return new Channel(clientfd);
 }
+}  // namespace channelg
 }  // namespace libak
