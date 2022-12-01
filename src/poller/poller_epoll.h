@@ -1,13 +1,14 @@
 #ifndef LIBAK_POLLER_EPOLL_H_
 #define LIBAK_POLLER_EPOLL_H_
 
+#include <sys/epoll.h>
+
 #include "poller.h"
 
 namespace libak {
 namespace poller {
 
 class EpollPoller : public Poller {
-
  private:
   using EventList = std::vector<struct epoll_event>;
   EventList events_;
@@ -23,6 +24,21 @@ class EpollPoller : public Poller {
   void poll(int timeout_ms, ChannelList* channels) override;
   void update_channel(Channel* channel) override;
   void remove_channel(Channel* channel) override;
+
+  void update(int epoll_op, Channel* c);
+
+  const char* operationToString(int op) {
+    switch (op) {
+      case EPOLL_CTL_ADD:
+        return "ADD";
+      case EPOLL_CTL_DEL:
+        return "DEL";
+      case EPOLL_CTL_MOD:
+        return "MOD";
+      default:
+        return "Unknown Operation";
+    }
+  }
 };
 
 }  // namespace poller

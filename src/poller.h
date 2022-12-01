@@ -9,6 +9,13 @@ class Poller {
  public:
   using ChannelList = std::vector<Channel*>;
 
+  // channel在poller中的状态
+  enum CHStatus {
+    CH_STATUS_NEW, // 未添加
+    CH_STATUS_ADDED, // 已添加
+    CH_STATUS_DELETED // 已删除
+  };
+
   // 在给定的时间内，返回发生事件的channel
   virtual void poll(int timeout_ms, ChannelList* channels) = 0;
 
@@ -20,6 +27,10 @@ class Poller {
 
   static std::unique_ptr<Poller> create_default_poller() {
     return std::make_unique<poller::EpollPoller>();
+  }
+
+  void assertInLoopThread() const {
+    // ownerLoop_->assertInLoopThread();
   }
 };
 

@@ -7,18 +7,34 @@
 
 namespace libak {
 
-void Channel::write(void *data, int data_len) {
-  // [size, ...data...]
-  // head里只有一个int值，存放着body size
-  auto head_size = sizeof(int);
-  auto buf_len = head_size + sizeof(char *) * data_len;
-  auto buf = (char *)malloc(buf_len);
-  memcpy(buf, &data_len, sizeof(int));
-  memcpy(buf + head_size, data, data_len);
+void Channel::enable_reading() {
+  events_ |= kReadEvent;
+  update_channel_event_to_loop();
+}
 
-  auto ret = send(socket_fd, buf, buf_len, 0);
-  if (ret != buf_len) {
-    std::cout << "send buf failed, sent: " << buf_len << " ret: " << ret << std::endl;
-  }
-};
+void Channel::disable_reading() {
+  events_ &= ~kReadEvent;
+  update_channel_event_to_loop();
+}
+
+void Channel::enable_writing() {
+  events_ |= kWriteEvent;
+  update_channel_event_to_loop();
+}
+void Channel::disable_writing() {
+  events_ &= ~kWriteEvent;
+  update_channel_event_to_loop();
+}
+void Channel::disable_all() {
+  events_ = kNoneEvent;
+  update_channel_event_to_loop();
+}
+
+bool Channel::is_writing() const { return events_ & kWriteEvent; }
+bool Channel::is_reading() const { return events_ & kReadEvent; }
+bool Channel::is_disable_all() const { return events_ == kNoneEvent; } 
+
+void Channel::update_channel_event_to_loop() {
+  loop_->update_channel(this);
+}
 }  // namespace libak

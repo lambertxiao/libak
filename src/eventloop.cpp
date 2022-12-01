@@ -40,4 +40,10 @@ void EventLoop::start_loop() {
   looping_ = false;
 };
 
+void EventLoop::update_channel(Channel* c) {
+  assert(c->owner_loop() == this);
+  assert_in_loop_thread();
+  poller_->update_channel(c);
+}
+
 }  // namespace libak

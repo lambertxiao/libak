@@ -21,7 +21,7 @@ class EventLoop : common::noncopyable {
   void quit_loop();
 
   // channel相关的方法
-  void add_channel(Channel* c);
+  void update_channel(Channel* c);
   void delete_channel(Channel* c);
 
  private:
