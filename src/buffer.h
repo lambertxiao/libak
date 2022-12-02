@@ -1,3 +1,6 @@
+#ifndef LIBAK_BUFFER_H_
+#define LIBAK_BUFFER_H_
+
 #include <assert.h>
 #include <string.h>
 #include <vector>
@@ -114,3 +117,4 @@ class Buffer {
 };
 
 }  // namespace libak
+#endif

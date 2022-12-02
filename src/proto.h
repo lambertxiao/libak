@@ -1,26 +1,19 @@
 #ifndef LIBAK_PROTO_H_
 #define LIBAK_PROTO_H_
 
-#include <string>
 #include <functional>
+#include <string>
 
-#include "channel_generator.h"
+#include "channelg.h"
 #include "msg_en_decoder.h"
 
 namespace libak {
 
 // 代表传输契约
-class Proto {
- public:
-  std::string key;
-  MsgEnDecoder* edr;
-  ConnGenerator* cg;
-
-  Proto(std::string key, MsgEnDecoder* edr, ConnGenerator* cg) {
-    this->key = key;
-    this->edr = edr;
-    this->cg = cg;
-  }
+struct Proto {
+  std::string key_;
+  MsgEnDecoder* edr_;
+  ChannelGenerator* cg_;
 };
 }  // namespace libak
 

@@ -1,10 +1,15 @@
 project(libak)
 
-include_directories("/root/workspace/libak/include")
-
 set(CODE_ROOT "/root/workspace/libak")
+include_directories("${CODE_ROOT}/src")
+include_directories("${CODE_ROOT}/deps/include")
+link_directories("${CODE_ROOT}/deps/lib")
+
 aux_source_directory("${CODE_ROOT}/src" SRC)
-set(SRC_DIR ${SRC})
+aux_source_directory("${CODE_ROOT}/src/poller" POLLER)
+aux_source_directory("${CODE_ROOT}/src/channelg" CHANNELG)
+aux_source_directory("${CODE_ROOT}/src/common" COMMON)
+set(SRC_DIR ${SRC} ${COMMON} ${POLLER} ${CHANNELG})
 
 set(WARNING_FLAGS "-Wall")
 
@@ -20,4 +25,6 @@ SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 add_executable(libak-hello ${CODE_ROOT}/example/hello.cpp ${SRC_DIR})
 
 # 链接静态库
-target_link_libraries(libak-hello dl)
+target_link_libraries(
+    libak-hello dl libfmt.a libfmtlog-static.a
+)

@@ -3,7 +3,7 @@
 namespace libak {
 
 void ProtoCenter::regist_proto(Proto* proto) {
-  protos[proto->key] = proto;
+  protos[proto->key_] = proto;
 };
 
 Proto* ProtoCenter::get_proto(std::string prokey) { 

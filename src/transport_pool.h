@@ -1,8 +1,8 @@
 #ifndef LIBAK_TRANSPORT_POOL_H_
 #define LIBAK_TRANSPORT_POOL_H_
 
-#include "transport.h"
 #include "endpoint.h"
+#include "transport.h"
 
 namespace libak {
 

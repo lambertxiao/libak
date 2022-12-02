@@ -5,9 +5,9 @@
 namespace libak {
 
 void Transport::send(void* msg) {
-  auto msg_data = proto->edr->encode_msg(msg);
+  auto msg_data = proto_->edr_->encode_msg(msg);
   std::cout << "write data to conn, msg_id: " << msg_data.msg_id << std::endl;
-  conn->write(msg_data.payload->addr, msg_data.payload->len);
+  // ch_->write(msg_data.payload->addr, msg_data.payload->len);
 };
 
 }

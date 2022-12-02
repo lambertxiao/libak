@@ -1,19 +1,13 @@
-#include "poller/poller_epoll.h"
-
-#include <assert.h>
 #include <fmtlog/fmtlog.h>
 #include <string.h>
 #include <sys/epoll.h>
 #include <unistd.h>
 
+#include "poller.h"
+#include "poller/poller_epoll.h"
+#include "channel.h"
+
 namespace libak {
-namespace poller {
-
-EpollPoller::EpollPoller() : epollfd_(epoll_create1(EPOLL_CLOEXEC)), events_(init_event_list_size) {
-  assert(epollfd_ > 0);
-};
-
-EpollPoller::~EpollPoller() { ::close(epollfd_); }
 
 void EpollPoller::poll(int timeout_ms, ChannelList* channels) {
   logd("poll channel cnt is {}", channels->size());
@@ -37,14 +31,13 @@ void EpollPoller::poll(int timeout_ms, ChannelList* channels) {
 void EpollPoller::update_channel(Channel* c) {
   int status = c->status_in_loop();
 
-  if (status == CH_STATUS_NEW || status == CH_STATUS_DELETED) {
-    int fd = c->fd();
-    c->set_status_in_loop(CH_STATUS_ADDED);
+  if (status == Channel::CH_STATUS_NEW || status == Channel::CH_STATUS_DELETED) {
+    c->set_status_in_loop(Channel::CH_STATUS_ADDED);
     update(EPOLL_CTL_ADD, c);
   } else {
     if (c->is_disable_all()) {
       update(EPOLL_CTL_DEL, c);
-      c->set_status_in_loop(CH_STATUS_DELETED);
+      c->set_status_in_loop(Channel::CH_STATUS_DELETED);
     } else {
       update(EPOLL_CTL_MOD, c);
     }
@@ -64,5 +57,23 @@ void EpollPoller::update(int epoll_op, Channel* c) {
   epoll_ctl(epollfd_, epoll_op, fd, &event);
 };
 
-}  // namespace poller
+void EpollPoller::remove_channel(Channel* c) {
+  int status = c->status_in_loop();
+  
+  if (status == Channel::CH_STATUS_ADDED) {
+    update(EPOLL_CTL_DEL, c);
+  };
+
+  c->set_status_in_loop(Channel::CH_STATUS_NEW);
+}
+
+void EpollPoller::activate_channels(int event_cnt, ChannelList* active_chs) {
+  for (int i = 0; i < event_cnt; i++) {
+    Channel* c = static_cast<Channel*>(events_[i].data.ptr);
+    // 告诉channel发生绳么事了
+    c->set_what_happen(events_[i].events);
+    active_chs->push_back(c);
+  }
+}
+  
 }  // namespace libak

@@ -1,18 +1,12 @@
-#include "eventloop.h"
-
 #include <assert.h>
 
 #include <thread>
 
 #include "fmtlog/fmtlog.h"
+#include "eventloop.h"
 #include "poller.h"
 
 namespace libak {
-
-EventLoop::EventLoop()
-    : looping_(false), quit_(false), thread_id_(std::this_thread::get_id()), poller_(Poller::create_default_poller()) {
-  logi("eventloop create in {} thread", thread_id_);
-};
 
 void EventLoop::assert_in_loop_thread() {
   auto curr_thread_id = std::this_thread::get_id();
@@ -20,23 +14,27 @@ void EventLoop::assert_in_loop_thread() {
 };
 
 void EventLoop::start_loop() {
+  fmtlog::setLogLevel(fmtlog::DBG);
+  fmtlog::startPollingThread(1);
+  
   assert(!looping_);
   assert_in_loop_thread();
   looping_ = true;
   quit_ = false;
 
-  logi("Eventloop {} starting loop", this);
+  logi("Eventloop starting loop");
 
   while (!quit_) {
     active_channels_.clear();
     poller_->poll(poll_timeout_, &active_channels_);
 
-    for (Channel* channel : active_channels_) {
-      channel->handle_event();
+    for (Channel* c : active_channels_) {
+      logi("channel {} handle event", c->fd());
+      c->handle_event();
     }
   }
 
-  logi("Eventloop {} stop looping", this);
+  logi("Eventloop stop looping");
   looping_ = false;
 };
 

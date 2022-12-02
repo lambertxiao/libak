@@ -1,25 +1,22 @@
 #ifndef LIBAK_TRANSPORT_H_
 #define LIBAK_TRANSPORT_H_
 
-#include "proto.h"
 #include "channel.h"
 #include "msg_queue.h"
+#include "proto.h"
 
 namespace libak {
-  
+
 class Transport {
  public:
-  Proto* proto;
-  Channel* channel;
-  MsgQueue *mq;
+  Proto* proto_;
+  Channel* ch_;
+  MsgQueue* mq;
 
-  Transport(Proto* proto, Channel* channel) {
-    this->proto = proto;
-    this->channel = channel;
-  };
+  Transport(Proto* proto, Channel* ch) : proto_(proto), ch_(ch){};
 
   void send(void* msg);
 };
-}
+}  // namespace libak
 
 #endif
