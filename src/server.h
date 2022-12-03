@@ -3,6 +3,7 @@
 
 #include <assert.h>
 #include <sys/socket.h>
+#include <fmtlog/fmtlog.h>
 
 #include "endpoint.h"
 #include "eventloop.h"
@@ -10,14 +11,21 @@
 
 namespace libak {
 
-void Listen(Proto proto, Endpoint ep) {
+void listen(Proto proto, Endpoint ep) {
   assert(proto.cg_ != NULL);
   auto fd = proto.cg_->gen(ep);
   assert(fd != 0);
 
   libak::EventLoop loop;
   Channel c(&loop, fd);
+  c.watch_read();
+
   loop.start_loop();
+}
+
+void set_log_level() {
+  fmtlog::setLogLevel(fmtlog::DBG);
+  fmtlog::startPollingThread(1);
 }
 
 }  // namespace libak

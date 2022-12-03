@@ -5,6 +5,7 @@
 #include <assert.h>
 
 #include <iostream>
+#include <fmtlog/fmtlog.h>
 
 #include "channel.h"
 #include "channelg/tcp_server.h"
@@ -13,9 +14,11 @@ namespace libak {
 
 namespace channelg {
 
-ChannelFD TCPServerCHG::gen(Endpoint ep) {
+ChannelFD TCPServer::gen(Endpoint ep) {
   int listen_fd = ::socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC, IPPROTO_TCP);
   assert(listen_fd > 0);
+
+  logd("TCPServer listen_fd:{}", listen_fd);
 
   struct sockaddr_in listen_addr;
   listen_addr.sin_family = AF_INET;
@@ -23,7 +26,9 @@ ChannelFD TCPServerCHG::gen(Endpoint ep) {
   listen_addr.sin_port = htons(ep.port);
 
   bind(listen_fd, (struct sockaddr *)&listen_addr, sizeof(listen_addr));
-	listen(listen_fd, 10);
+	int ret = listen(listen_fd, 10);
+
+  assert(ret == 0);
 
   return listen_fd;
 };

@@ -7,7 +7,7 @@
 namespace libak {
 namespace channelg {
 
-class TCPServerCHG : public ChannelGenerator {
+class TCPServer : public ChannelGenerator {
  public:
   ChannelFD gen(Endpoint ep) override;
 };

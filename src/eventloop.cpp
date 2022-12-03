@@ -14,15 +14,12 @@ void EventLoop::assert_in_loop_thread() {
 };
 
 void EventLoop::start_loop() {
-  fmtlog::setLogLevel(fmtlog::DBG);
-  fmtlog::startPollingThread(1);
-  
+  logi("Eventloop starting loop, poll_timeout_:{}", poll_timeout_);
+
   assert(!looping_);
   assert_in_loop_thread();
   looping_ = true;
   quit_ = false;
-
-  logi("Eventloop starting loop");
 
   while (!quit_) {
     active_channels_.clear();

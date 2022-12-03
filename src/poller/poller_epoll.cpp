@@ -10,8 +10,6 @@
 namespace libak {
 
 void EpollPoller::poll(int timeout_ms, ChannelList* channels) {
-  logd("poll channel cnt is {}", channels->size());
-
   int event_cnt = epoll_wait(epollfd_, &*events_.begin(), static_cast<int>(events_.size()), timeout_ms);
 
   if (event_cnt == 0) {
@@ -52,6 +50,8 @@ void EpollPoller::update(int epoll_op, Channel* c) {
   event.events = c->events();
   // 将channel托管给epoll
   event.data.ptr = c;
+  // 设置触发模式为ET边沿触发, 仅做个测试
+  // event.events |= EPOLLET;
 
   logd("epoll_ctl op:{} fd:{} events:{}", epoll_op, fd, c->events());
   epoll_ctl(epollfd_, epoll_op, fd, &event);

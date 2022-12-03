@@ -4,9 +4,8 @@
 #include "eventloop.h"
 #include "proto.h"
 #include "endpoint.h"
-#include "server.h"
-#include "channelg.h"
-#include "channelg/tcp_server.h"
-#include "channelg/tcp_client.h"
+#include "tcp_server.h"
+#include "net_addr.h"
+#include "log.h"
 
 #endif

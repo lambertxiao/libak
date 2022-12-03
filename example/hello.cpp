@@ -1,18 +1,10 @@
 #include "libak.h"
 
 int main() {
-  libak::channelg::TCPServerCHG cg;
-
-  auto proto = libak::Proto{
-    .key_ = "hello-server", 
-    .edr_ = NULL, 
-    .cg_= &cg,
-  };
-
-  auto ep = libak::Endpoint{
-    .ip = "127.0.0.1",
-    .port = 8080,
-  };
-
-  libak::Listen(proto, ep);
+  libak::set_log_level();
+  libak::EventLoop loop;
+  libak::NetAddr addr("127.0.0.1", 8080, false);
+  libak::TCPServer server(&loop, addr);
+  server.listen();
+  loop.start_loop();
 }

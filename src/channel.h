@@ -38,10 +38,10 @@ class Channel {
   const uint32_t events() const { return events_; }
 
   // 控制channel的读写状态
-  void enable_reading();
-  void disable_reading();
-  void enable_writing();
-  void disable_writing();
+  void watch_read();
+  void unwatch_read();
+  void watch_write();
+  void unwatch_write();
   void disable_all();
 
   // 通知eventloop说channel的关注事件更新了
