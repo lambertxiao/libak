@@ -26,8 +26,15 @@ void Acceptor::listen() {
 
 // 在handle_read中产生新连接
 void Acceptor::handle_read() {
-  NetAddr peer_addr;
-  listen_socket_.accept(peer_addr);
+  sockaddr_in addr;
+  int conn_fd = listen_socket_.accept(&addr);
+
+  if (conn_fd >= 0) {
+    NetAddr peer_addr(addr);
+    new_conn_cb_(conn_fd, peer_addr);
+  } else {
+    loge("accpet error, conn_fd:{}", conn_fd);
+  }
 }
 
 }  // namespace libak

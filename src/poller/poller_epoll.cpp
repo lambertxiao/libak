@@ -51,7 +51,7 @@ void EpollPoller::update(int epoll_op, Channel* c) {
   // 将channel托管给epoll
   event.data.ptr = c;
   // 设置触发模式为ET边沿触发, 仅做个测试
-  // event.events |= EPOLLET;
+  event.events |= EPOLLET;
 
   logd("epoll_ctl op:{} fd:{} events:{}", epoll_op, fd, c->events());
   epoll_ctl(epollfd_, epoll_op, fd, &event);

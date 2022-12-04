@@ -11,7 +11,7 @@ namespace libak {
 class NetAddr {
  public:
   NetAddr() {};
-  NetAddr(std::string ip, uint16_t port, bool ipv6 = false) : ip_(ip), port_(port) {
+  NetAddr(std::string ip, uint16_t port, bool ipv6 = false) {
     if (!ipv6) {
       addr_.sin_family = AF_INET;
       addr_.sin_port = htons(port);
@@ -19,18 +19,17 @@ class NetAddr {
     }
   };
 
+  NetAddr(sockaddr_in addr): addr_(addr) {};
+
   sa_family_t family() const { return addr_.sin_family; }
-  std::string ip() { return ip_; }
-  uint16_t port() { return port_; }
+  std::string ip() { return inet_ntoa(addr_.sin_addr); }
+  uint16_t port() { return ntohs(addr_.sin_port); }
 
   sockaddr* addr() { 
     return (struct sockaddr *)&addr_;
   } 
 
  private:
-  std::string ip_;
-  uint16_t port_;
-
   union {
     struct sockaddr_in addr_;
     struct sockaddr_in6 addr6_;

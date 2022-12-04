@@ -23,11 +23,6 @@ void listen(Proto proto, Endpoint ep) {
   loop.start_loop();
 }
 
-void set_log_level() {
-  fmtlog::setLogLevel(fmtlog::DBG);
-  fmtlog::startPollingThread(1);
-}
-
 }  // namespace libak
 
 #endif

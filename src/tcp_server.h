@@ -13,6 +13,7 @@ class TCPServer : common::noncopyable {
   void listen();
 
  private:
+  // 这个loop负责连接接入
   EventLoop* loop_;
 
   // acceptor负责listen以及accept
