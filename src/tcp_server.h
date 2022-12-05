@@ -4,6 +4,7 @@
 #include "common/noncopyable.h"
 #include "net_addr.h"
 #include "eventloop.h"
+#include "eventloop_pool.h"
 #include "acceptor.h"
 
 namespace libak {
@@ -15,6 +16,9 @@ class TCPServer : common::noncopyable {
  private:
   // 这个loop负责连接接入
   EventLoop* loop_;
+
+  // 负责io的loop池
+  EventLoopPool* ioloop_pool_;
 
   // acceptor负责listen以及accept
   std::unique_ptr<Acceptor> acceptor_;
